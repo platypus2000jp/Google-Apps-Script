@@ -1,0 +1,29 @@
+スクリプトの手順
+Google スプレッドシートを開く。
+メニューの「拡張機能」→「Apps Script」を選択。
+新しいプロジェクトが開いたら、次のコードを Code.gs に貼り付けます。
+スクリプトコード
+javascript
+コードをコピーする
+function listFolderContents() {
+  var folderId = 'YOUR_FOLDER_ID';  // フォルダIDを入力します
+  var folder = DriveApp.getFolderById(folderId);
+  var files = folder.getFiles();
+  var subfolders = folder.getFolders();
+  
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  sheet.clear();  // 既存のデータをクリア
+  sheet.appendRow(['名前', 'タイプ', 'URL']);  // ヘッダ行の追加
+  
+  // フォルダ内のファイルをリスト
+  while (files.hasNext()) {
+    var file = files.next();
+    sheet.appendRow([file.getName(), 'ファイル', file.getUrl()]);
+  }
+  
+  // フォルダ内のサブフォルダをリスト
+  while (subfolders.hasNext()) {
+    var subfolder = subfolders.next();
+    sheet.appendRow([subfolder.getName(), 'フォルダ', subfolder.getUrl()]);
+  }
+}
